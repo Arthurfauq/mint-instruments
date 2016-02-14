@@ -1,2 +1,3 @@
-# mint-instruments
-Software &amp; Interface of MINT
+# MINT Instruments
+
+Code source de l'interface et du software du projet Mint
