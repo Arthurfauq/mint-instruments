@@ -50,15 +50,18 @@
             size_hint: None, None
             size: 200, 100
             center_x: root.center_x - 250
-            center_y: 150
+            center_y: 120
             font_size: '30sp'
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
 
         Button:
             text: 'Pad'
             size_hint: None, None
             size: 200, 100
             center_x: root.center_x
-            center_y: 150
+            center_y: 120
             font_size: '30sp'
             on_press:
                 root.manager.transition = WipeTransition()
@@ -69,7 +72,7 @@
             size_hint: None, None
             size: 200, 100
             center_x: root.center_x + 250
-            center_y: 150
+            center_y: 120
             font_size: '30sp'
             on_press:
                 root.manager.transition = WipeTransition()
@@ -189,3 +192,43 @@
                 text: 'Save'
                 on_press: root.release_audio()
                 size: 80, 50
+
+<RecordScreen>
+    FloatLayout:
+        Image:
+            source: "./images/logo.png"
+            size_hint: None, None
+            size: 220, 220
+            center_x: root.center_x
+            center_y: 320
+
+        Button:
+            text: 'Record'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x - 250
+            center_y: 120
+            font_size: '30sp'
+            on_press: root.record_audio()
+
+        Button:
+            text: 'Stop'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x
+            center_y: 120
+            font_size: '30sp'
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
+
+        Button:
+            text: 'Play'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x + 250
+            center_y: 120
+            font_size: '30sp'
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
