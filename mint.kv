@@ -1,0 +1,191 @@
+#:kivy 1.9.1
+#:import WipeTransition kivy.uix.screenmanager.WipeTransition
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import DropDown kivy.uix.dropdown
+
+<Label>:
+    #-font_name: 'fonts/Bebas'
+
+<Button>:
+    background_normal: ''
+    background_color: (0,0,0,1)
+
+<Screen>:
+    canvas:
+        Color:
+            rgb: (1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Spinner>:
+    size_hint: None, None
+    size: 250, 60
+    spacing: 20
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: 250, 60
+    spacing: 20
+
+<HomeScreen>:
+    AnchorLayout:
+        IconButton:
+            source: "./images/logo.png"
+            on_press:
+                root.manager.transition = FadeTransition()
+                root.manager.current = 'Menu'
+
+<MenuScreen>:
+    FloatLayout:
+        Image:
+            source: "./images/logo.png"
+            size_hint: None, None
+            size: 220, 220
+            center_x: root.center_x
+            center_y: 320
+
+        Button:
+            text: 'Record'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x - 250
+            center_y: 150
+            font_size: '30sp'
+
+        Button:
+            text: 'Pad'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x
+            center_y: 150
+            font_size: '30sp'
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
+
+        Button:
+            text: 'Production'
+            size_hint: None, None
+            size: 200, 100
+            center_x: root.center_x + 250
+            center_y: 150
+            font_size: '30sp'
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
+
+
+<ProductionScreen>:
+    FloatLayout:
+        Label:
+            text: "Production"
+            font_size: '25sp'
+            center_x: root.center_x
+            center_y: 400
+            color: 0,0,0,1
+
+        Button:
+            text: 'New'
+            center_x: root.center_x
+            size_hint: None, None
+            size: 200, 70
+            center_y: 300
+
+        Button:
+            text: 'Open Last'
+            center_x: root.center_x
+            size_hint: None, None
+            size: 200, 70
+            center_y: 210
+
+        Button:
+            text: 'Open'
+            center_x: root.center_x
+            size_hint: None, None
+            size: 200, 70
+            center_y: 120
+
+        Button:
+            text: 'Menu'
+            center_x: root.center_x
+            size_hint: None, None
+            center_y: 60
+            size: 100, 40
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = self.text
+
+<AudioButton>:
+    size_hint: None, None
+    text_size: self.size
+    font_size: '14sp'
+    valign: 'middle'
+    halign: 'center'
+    size: 100, 100
+
+<PadScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            size_hint_y: .1
+            text: "Pad"
+            font_size: 30
+            color: 0,0,0,1
+
+        BoxLayout:
+            size_hint_y: .1
+            orientation: 'horizontal'
+            canvas.before:
+                Color:
+                    rgb: (0, 0, 1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Button:
+                text: 'Play'
+
+            Button:
+                text: 'Load'
+
+        Spinner:
+            size_hint_y: .1
+            id: styles
+            text: 'Choose style'
+            pos_hint_x: None
+            pos_hint_y: None
+            center_x: root.center_x
+
+        BoxLayout:
+            Slider:
+                min: 0.0
+                max: 1.0
+                value: 1.0
+                on_value: root.set_volume(self.value)
+                orientation: "vertical"
+                size_hint_x: None
+
+            StackLayout:
+                center_x: root.center_x
+                id: sl
+
+        BoxLayout:
+            size_hint_y: .1
+            orientation: 'horizontal'
+            Button:
+                text: 'Back'
+                on_press:
+                    root.release_audio()
+                    root.manager.transition = WipeTransition()
+                    root.manager.current = 'Menu'
+                size: 80, 50
+
+            Button:
+                text: 'Stop'
+                on_press: root.release_audio()
+                size: 80, 50
+
+            Button:
+                text: 'Save'
+                on_press: root.release_audio()
+                size: 80, 50
