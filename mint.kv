@@ -194,6 +194,7 @@
                 size: 80, 50
 
 <RecordScreen>
+    record_button: record_button
     FloatLayout:
         Image:
             source: "./images/logo.png"
@@ -202,33 +203,12 @@
             center_x: root.center_x
             center_y: 320
 
-        Button:
-            text: 'Record'
+        ToggleButton:
+            id: record_button
+            text: root.button_text
             size_hint: None, None
             size: 200, 100
-            center_x: root.center_x - 250
             center_y: 120
-            font_size: '30sp'
-            on_press: root.record_audio()
-
-        Button:
-            text: 'Stop'
-            size_hint: None, None
-            size: 200, 100
             center_x: root.center_x
-            center_y: 120
             font_size: '30sp'
-            on_press:
-                root.manager.transition = WipeTransition()
-                root.manager.current = self.text
-
-        Button:
-            text: 'Play'
-            size_hint: None, None
-            size: 200, 100
-            center_x: root.center_x + 250
-            center_y: 120
-            font_size: '30sp'
-            on_press:
-                root.manager.transition = WipeTransition()
-                root.manager.current = self.text
+            on_press:root.record_audio()

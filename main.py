@@ -1,6 +1,7 @@
 import kivy
 import pyaudio
 import wave
+import time
 kivy.require('1.9.1')
 
 from kivy.app import App
@@ -14,11 +15,11 @@ from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from glob import glob
 from os.path import dirname, join, basename
 
+WIDTH = 2
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 48000
 CHUNK = 512
-RECORD_SECONDS = 5
 WAVE_OUTPUT_FILENAME = "test.wav"
 
 class HomeScreen(Screen):
@@ -30,33 +31,47 @@ class MenuScreen(Screen):
 
 
 class RecordScreen(Screen):
+    record_button = ObjectProperty(None)
+    button_text = StringProperty()
+
     def __init__(self, **kwargs):
         super(RecordScreen, self).__init__(**kwargs)
+        self.button_text = "Record"
 
     def record_audio(self):
         audio = pyaudio.PyAudio()
 
-        stream = audio.open(format=FORMAT, channels=CHANNELS,
-                            rate=RATE, input=True,
-                            frames_per_buffer=CHUNK)
-        print "recording..."
-        frames = []
+        def callback(in_data, frame_count, time_info, status):
+            if self.record_button.state == "down":
+                waveFile.writeframes(in_data)
+                return (in_data, pyaudio.paContinue)
+            elif self.record_button.state == "normal":
+                waveFile.close()
+                return (in_data, pyaudio.paComplete)
 
-        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-            data = stream.read(CHUNK)
-            frames.append(data)
-        print "Finished recording !"
+        stream = audio.open(format=FORMAT,
+                            channels=CHANNELS,
+                            rate=RATE,
+                            input=True,
+                            stream_callback=callback,
+                            frames_per_buffer=1024)
 
-        stream.stop_stream()
-        stream.close()
-        audio.terminate()
+        if self.record_button.state == "down":
+            self.button_text = "Stop"
+            stream.start_stream()
+            print("Start recording !")
 
-        waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-        waveFile.setnchannels(CHANNELS)
-        waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-        waveFile.setframerate(RATE)
-        waveFile.writeframes(b''.join(frames))
-        waveFile.close()
+            waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+            waveFile.setnchannels(CHANNELS)
+            waveFile.setframerate(RATE)
+            waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+
+        elif self.record_button.state == "normal":
+            self.button_text = "Record"
+            print("Recording finished !")
+            stream.stop_stream()
+            stream.close()
+            audio.terminate()
 
 
 class ProductionScreen(Screen):
