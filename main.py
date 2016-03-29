@@ -11,6 +11,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
+from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from glob import glob
 from os.path import dirname, join, basename
@@ -25,6 +26,9 @@ WAVE_OUTPUT_FILENAME = "test.wav"
 class HomeScreen(Screen):
     pass
 
+class BackButton(FloatLayout):
+    pass
+
 
 class MenuScreen(Screen):
     pass
@@ -33,10 +37,12 @@ class MenuScreen(Screen):
 class RecordScreen(Screen):
     record_button = ObjectProperty(None)
     button_text = StringProperty()
+    global waveFile
+    waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
 
     def __init__(self, **kwargs):
         super(RecordScreen, self).__init__(**kwargs)
-        self.button_text = "Record"
+        self.button_text = "Start"
 
     def record_audio(self):
         audio = pyaudio.PyAudio()
@@ -46,7 +52,6 @@ class RecordScreen(Screen):
                 waveFile.writeframes(in_data)
                 return (in_data, pyaudio.paContinue)
             elif self.record_button.state == "normal":
-                waveFile.close()
                 return (in_data, pyaudio.paComplete)
 
         stream = audio.open(format=FORMAT,
@@ -54,24 +59,23 @@ class RecordScreen(Screen):
                             rate=RATE,
                             input=True,
                             stream_callback=callback,
-                            frames_per_buffer=1024)
+                            frames_per_buffer=512)
 
         if self.record_button.state == "down":
             self.button_text = "Stop"
             stream.start_stream()
             print("Start recording !")
-
-            waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
             waveFile.setnchannels(CHANNELS)
             waveFile.setframerate(RATE)
             waveFile.setsampwidth(audio.get_sample_size(FORMAT))
 
         elif self.record_button.state == "normal":
-            self.button_text = "Record"
+            self.button_text = "Start"
             print("Recording finished !")
             stream.stop_stream()
             stream.close()
             audio.terminate()
+            waveFile.close()
 
 
 class ProductionScreen(Screen):
@@ -113,15 +117,24 @@ class AudioButton(Button):
 
 
 class PadScreen(Screen):
+    global curdir
+    curdir = dirname(__file__)
+    style = ObjectProperty(None)
+    volume = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super(PadScreen, self).__init__(**kwargs)
-        curdir = dirname(__file__)
+        self.load_styles()
 
+    def load_styles(self):
         for name in glob(join(curdir, 'sounds/pad/styles', '*')):
-            style = basename(name).capitalize()
-            self.ids.styles.values.append(style)
+            styleName = basename(name).capitalize()
+            self.ids.style.values.append(styleName)
 
-        for name in glob(join(curdir, 'sounds/pad/instruments/drums_percussions', '*.wav')):
+    def load_sounds(self):
+        self.release_audio()
+        self.ids.sl.clear_widgets()
+        for name in glob(join(curdir, 'sounds/pad/styles/' + self.ids.style.text.lower(), '*.wav')):
             pad_button = AudioButton(
                 text=basename(name[:-4]).replace('_', ' '),
                 filename=name)
@@ -132,6 +145,7 @@ class PadScreen(Screen):
             audiobutton.release_audio()
 
     def set_volume(self, value):
+        self.volume.text =  str(round(value*100, 0)).replace('.0', '%')
         for audiobutton in self.ids.sl.children:
             audiobutton.set_volume(value)
 
@@ -145,7 +159,6 @@ class MintApp(App):
         root.add_widget(PadScreen(name='Pad'))
         root.add_widget(RecordScreen(name='Record'))
         return root
-
 
 if __name__ == "__main__":
     MintApp().run()

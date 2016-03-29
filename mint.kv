@@ -4,11 +4,19 @@
 #:import DropDown kivy.uix.dropdown
 
 <Label>:
-    #-font_name: 'fonts/Bebas'
+    font_size: 25
 
 <Button>:
+    # default texture is grey, this sets it back to none
     background_normal: ''
-    background_color: (0,0,0,1)
+    background_color: .9,.3,.3, 1
+
+<Spinner>:
+    font_size: 18
+    spacing: 10
+
+<SpinnerOption>:
+    font_size: 18
 
 <Screen>:
     canvas:
@@ -18,106 +26,103 @@
             pos: self.pos
             size: self.size
 
-<Spinner>:
-    size_hint: None, None
-    size: 250, 60
-    spacing: 20
-
-<SpinnerOption>:
-    size_hint: None, None
-    size: 250, 60
-    spacing: 20
-
 <HomeScreen>:
     AnchorLayout:
         IconButton:
             source: "./images/logo.png"
-            on_press:
+            on_release:
                 root.manager.transition = FadeTransition()
                 root.manager.current = 'Menu'
 
 <MenuScreen>:
     FloatLayout:
         Image:
-            source: "./images/logo.png"
+            source: "./images/logo_small.png"
             size_hint: None, None
-            size: 220, 220
-            center_x: root.center_x
-            center_y: 320
+            size: 100, 100
+            pos_hint: {'center_x' : .5, 'top' : .90}
+
+        Label:
+            text: "Home Screen"
+            font_size: 35
+            color: 0,0,0,1
+            size_hint: None, None
+            pos_hint: {'center_x' : .5, 'y': .5}
 
         Button:
             text: 'Record'
             size_hint: None, None
-            size: 200, 100
-            center_x: root.center_x - 250
-            center_y: 120
-            font_size: '30sp'
-            on_press:
+            size: 180, 80
+            pos_hint: {'center_x' : .25, 'y': .25}
+            on_release:
                 root.manager.transition = WipeTransition()
                 root.manager.current = self.text
 
         Button:
             text: 'Pad'
             size_hint: None, None
-            size: 200, 100
-            center_x: root.center_x
-            center_y: 120
-            font_size: '30sp'
-            on_press:
+            size: 180, 80
+            pos_hint: {'center_x' : .5, 'y': .25}
+            on_release:
                 root.manager.transition = WipeTransition()
                 root.manager.current = self.text
 
         Button:
             text: 'Production'
             size_hint: None, None
-            size: 200, 100
-            center_x: root.center_x + 250
-            center_y: 120
-            font_size: '30sp'
-            on_press:
+            size: 180, 80
+            pos_hint: {'center_x' : .75, 'y': .25}
+            on_release:
                 root.manager.transition = WipeTransition()
                 root.manager.current = self.text
 
 
 <ProductionScreen>:
     FloatLayout:
+        Image:
+            source: "./images/logo_small.png"
+            size_hint: None, None
+            size: 100, 100
+            pos_hint: {'center_x' : .5, 'top' : .90}
+
         Label:
             text: "Production"
-            font_size: '25sp'
-            center_x: root.center_x
-            center_y: 400
+            font_size: 35
             color: 0,0,0,1
+            size_hint: None, None
+            pos_hint: {'center_x' : .5, 'y': .5}
 
         Button:
             text: 'New'
-            center_x: root.center_x
             size_hint: None, None
-            size: 200, 70
-            center_y: 300
+            size: 180, 80
+            pos_hint: {'center_x' : .25, 'y': .25}
 
         Button:
             text: 'Open Last'
-            center_x: root.center_x
             size_hint: None, None
-            size: 200, 70
-            center_y: 210
+            size: 180, 80
+            pos_hint: {'center_x' : .5, 'y': .25}
 
         Button:
             text: 'Open'
-            center_x: root.center_x
             size_hint: None, None
-            size: 200, 70
-            center_y: 120
+            size: 180, 80
+            pos_hint: {'center_x' : .75, 'y': .25}
+            center_y: 110
 
+    FloatLayout:
+        size_hint_y: .2
+        padding: 10
         Button:
-            text: 'Menu'
-            center_x: root.center_x
-            size_hint: None, None
-            center_y: 60
-            size: 100, 40
-            on_press:
+            text: 'Home'
+            on_release:
                 root.manager.transition = WipeTransition()
-                root.manager.current = self.text
+                root.manager.current = 'Menu'
+            size_hint: None, None
+            size: 100, 35
+            pos_hint: {'x' : .01, 'y': .1}
+            font_size: 18
 
 <AudioButton>:
     size_hint: None, None
@@ -128,87 +133,112 @@
     size: 100, 100
 
 <PadScreen>:
+    style: style
+    volume: volume
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            size_hint_y: .1
-            text: "Pad"
-            font_size: 30
-            color: 0,0,0,1
+        FloatLayout:
+            size_hint_y: .3
+            Label:
+                text: "Pad"
+                font_size: 25
+                color: 0,0,0,1
+                size_hint: None, None
+                pos_hint: {'center_x' : .5, 'y': .2}
+
+            Spinner:
+                id: style
+                text: 'Choose style'
+                size_hint: None, None
+                size: 250, 40
+                font_size: 20
+                pos_hint: {'center_x' : .5, 'y': .1}
+                on_text: root.load_sounds()
+
+            Label:
+                text: 'Volume :'
+                font_size: 18
+                color: 0,0,0,1
+                size_hint: None, None
+                pos_hint: {'x' : 0.01, 'top': .60}
+
+            Label:
+                text: '75%'
+                id: volume
+                font_size: 18
+                color: 0,0,0,1
+                size_hint: None, None
+                pos_hint: {'x' : 0.085, 'top': .60}
 
         BoxLayout:
-            size_hint_y: .1
-            orientation: 'horizontal'
-            canvas.before:
-                Color:
-                    rgb: (0, 0, 1)
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            Button:
-                text: 'Play'
-
-            Button:
-                text: 'Load'
-
-        Spinner:
-            size_hint_y: .1
-            id: styles
-            text: 'Choose style'
-            pos_hint_x: None
-            pos_hint_y: None
-            center_x: root.center_x
-
-        BoxLayout:
+            padding: 10
             Slider:
                 min: 0.0
                 max: 1.0
-                value: 1.0
+                value: .75
                 on_value: root.set_volume(self.value)
                 orientation: "vertical"
-                size_hint_x: None
+                size_hint_x: .2
 
             StackLayout:
                 center_x: root.center_x
+                spacing: 5
                 id: sl
 
-        BoxLayout:
-            size_hint_y: .1
-            orientation: 'horizontal'
+        FloatLayout:
+            size_hint_y: .2
+            padding: 10
             Button:
-                text: 'Back'
-                on_press:
+                text: 'Stop'
+                on_release: root.release_audio()
+                size_hint: None, None
+                size: 160, 50
+                pos_hint: {'center_x' : .5, 'top': 1}
+
+            Button:
+                text: 'Home'
+                on_release:
                     root.release_audio()
                     root.manager.transition = WipeTransition()
                     root.manager.current = 'Menu'
-                size: 80, 50
-
-            Button:
-                text: 'Stop'
-                on_press: root.release_audio()
-                size: 80, 50
-
-            Button:
-                text: 'Save'
-                on_press: root.release_audio()
-                size: 80, 50
+                size_hint: None, None
+                size: 100, 35
+                pos_hint: {'x' : .01, 'y': .1}
+                font_size: 18
 
 <RecordScreen>
     record_button: record_button
     FloatLayout:
         Image:
-            source: "./images/logo.png"
+            source: "./images/logo_small.png"
             size_hint: None, None
-            size: 220, 220
-            center_x: root.center_x
-            center_y: 320
+            size: 100, 100
+            pos_hint: {'center_x' : .5, 'top' : .90}
+
+        Label:
+            text: "Record"
+            font_size: 35
+            color: 0,0,0,1
+            size_hint: None, None
+            pos_hint: {'center_x' : .5, 'y': .5}
 
         ToggleButton:
             id: record_button
             text: root.button_text
             size_hint: None, None
-            size: 200, 100
-            center_y: 120
-            center_x: root.center_x
-            font_size: '30sp'
-            on_press:root.record_audio()
+            size: 180, 80
+            pos_hint: {'center_x' : .5, 'y': .25}
+            on_release:root.record_audio()
+
+    FloatLayout:
+        size_hint_y: .2
+        padding: 10
+        Button:
+            text: 'Home'
+            on_release:
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'Menu'
+            size_hint: None, None
+            size: 100, 35
+            pos_hint: {'x' : .01, 'y': .1}
+            font_size: 18
