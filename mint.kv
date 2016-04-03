@@ -29,25 +29,25 @@
 <HomeScreen>:
     AnchorLayout:
         IconButton:
-            source: "./images/logo.png"
+            source: "./img/logo.png"
             on_release:
                 root.manager.transition = FadeTransition()
                 root.manager.current = 'Menu'
 
 <MenuScreen>:
     FloatLayout:
-        Image:
-            source: "./images/logo_small.png"
-            size_hint: None, None
-            size: 100, 100
-            pos_hint: {'center_x' : .5, 'top' : .90}
-
         Label:
-            text: "Home Screen"
+            text: "HOME"
             font_size: 35
             color: 0,0,0,1
             size_hint: None, None
-            pos_hint: {'center_x' : .5, 'y': .5}
+            pos_hint: {'center_x' : .5, 'top' : .90}
+
+        Label:
+            text: "Choose an option"
+            color: 0,0,0,1
+            size_hint: None, None
+            pos_hint: {'center_x' : .5, 'y' : .5}
 
         Button:
             text: 'Record'
@@ -56,7 +56,7 @@
             pos_hint: {'center_x' : .25, 'y': .25}
             on_release:
                 root.manager.transition = WipeTransition()
-                root.manager.current = self.text
+                root.manager.current = 'Tracks'
 
         Button:
             text: 'Pad'
@@ -79,18 +79,18 @@
 
 <ProductionScreen>:
     FloatLayout:
-        Image:
-            source: "./images/logo_small.png"
-            size_hint: None, None
-            size: 100, 100
-            pos_hint: {'center_x' : .5, 'top' : .90}
-
         Label:
-            text: "Production"
+            text: "PRODUCTION"
             font_size: 35
             color: 0,0,0,1
             size_hint: None, None
-            pos_hint: {'center_x' : .5, 'y': .5}
+            pos_hint: {'center_x' : .5, 'top' : .90}
+
+        Label:
+            text: "Choose an option"
+            color: 0,0,0,1
+            size_hint: None, None
+            pos_hint: {'center_x' : .5, 'y' : .5}
 
         Button:
             text: 'New'
@@ -115,14 +115,14 @@
         size_hint_y: .2
         padding: 10
         Button:
-            text: 'Home'
+            text: 'Menu'
             on_release:
                 root.manager.transition = WipeTransition()
                 root.manager.current = 'Menu'
             size_hint: None, None
-            size: 100, 35
-            pos_hint: {'x' : .01, 'y': .1}
-            font_size: 18
+            size: 100, 40
+            pos_hint: {'x' : .03, 'y': .25}
+            font_size: 20
 
 <AudioButton>:
     size_hint: None, None
@@ -140,7 +140,7 @@
         FloatLayout:
             size_hint_y: .3
             Label:
-                text: "Pad"
+                text: "PAD"
                 font_size: 25
                 color: 0,0,0,1
                 size_hint: None, None
@@ -174,7 +174,7 @@
             padding: 10
             Slider:
                 min: 0.0
-                max: 1.0
+                max: 1
                 value: .75
                 on_value: root.set_volume(self.value)
                 orientation: "vertical"
@@ -192,53 +192,269 @@
                 text: 'Stop'
                 on_release: root.release_audio()
                 size_hint: None, None
-                size: 160, 50
-                pos_hint: {'center_x' : .5, 'top': 1}
+                pos_hint: {'center_x' : .5, 'y': .25}
+                size: 140, 50
 
             Button:
-                text: 'Home'
+                text: 'Menu'
                 on_release:
                     root.release_audio()
                     root.manager.transition = WipeTransition()
                     root.manager.current = 'Menu'
                 size_hint: None, None
-                size: 100, 35
-                pos_hint: {'x' : .01, 'y': .1}
-                font_size: 18
+                size: 100, 40
+                pos_hint: {'x' : .03, 'y': .25}
+                font_size: 20
 
-<RecordScreen>
-    record_button: record_button
+<Tracks>:
     FloatLayout:
-        Image:
-            source: "./images/logo_small.png"
-            size_hint: None, None
-            size: 100, 100
-            pos_hint: {'center_x' : .5, 'top' : .90}
-
         Label:
-            text: "Record"
+            text: "RECORD"
             font_size: 35
             color: 0,0,0,1
             size_hint: None, None
-            pos_hint: {'center_x' : .5, 'y': .5}
+            pos_hint: {'center_x' : .5, 'top' : .90}
 
-        ToggleButton:
-            id: record_button
-            text: root.button_text
+        Label:
+            text: 'How many tracks do you want to record ?'
+            color: 0, 0, 0, 1
+            size_hint: None, None
+            pos_hint: {'center_x':.5, 'y': .5}
+
+        Button:
+            text: 'One'
             size_hint: None, None
             size: 180, 80
-            pos_hint: {'center_x' : .5, 'y': .25}
-            on_release:root.record_audio()
+            pos_hint: {'center_x' : .35, 'y': .25}
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'InstruOne'
+
+        Button:
+            text: 'Two'
+            size_hint: None, None
+            size: 180, 80
+            pos_hint: {'center_x' : .65, 'y': .25}
+            on_press:
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'InstruTwo'
 
     FloatLayout:
         size_hint_y: .2
         padding: 10
         Button:
-            text: 'Home'
+            text: 'Menu'
             on_release:
                 root.manager.transition = WipeTransition()
                 root.manager.current = 'Menu'
             size_hint: None, None
-            size: 100, 35
-            pos_hint: {'x' : .01, 'y': .1}
-            font_size: 18
+            size: 100, 40
+            pos_hint: {'x' : .03, 'y': .25}
+            font_size: 20
+
+<ChooseInstruOne>:
+    FloatLayout:
+        Label:
+            text: 'Choose one instrument'
+            color: 0, 0.5, 1, 1
+            size_hint: 1, 1
+            font_size: 40
+            pos_hint: {'center_x':.5, 'center_y':.9}
+
+
+        Button:
+            text: 'Next'
+            size_hint: .2, .1
+            pos_hint: {'center_x':.85, 'center_y': .1}
+            on_press:
+                print("one_save is pressed")
+                root.saveinstru()
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'RecordOne'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 10, 150, 10, 170
+            spacing: 20
+            Carousel:
+                direction: 'right'
+                anim_type: 'linear'
+                id: carousel
+                AsyncImage:
+                    source: 'img/micro.png'
+
+                AsyncImage:
+                    source: 'img/piano.png'
+
+                AsyncImage:
+                    source: 'img/guitarelec_2.png'
+
+                AsyncImage:
+                    source: 'img/guitaraccoustic_2.png'
+
+                AsyncImage:
+                    source: 'img/batterie.png'
+
+    FloatLayout:
+        size_hint_y: .2
+        padding: 10
+        Button:
+            text: 'Tracks'
+            on_release:
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'Tracks'
+            size_hint: None, None
+            size: 100, 40
+            pos_hint: {'x' : .03, 'y': .25}
+            font_size: 20
+
+<ChooseInstruTwo>:
+    FloatLayout:
+        Label:
+            text: 'Choose two instruments'
+            color: 0, 0.5, 1, 1
+            size_hint: 1, 1
+            font_size: 40
+            pos_hint: {'center_x':.5, 'center_y':.9}
+
+
+        Button:
+            text: 'Next'
+            size_hint: .2, .1
+            pos_hint: {'center_x':.85, 'center_y': .1}
+            on_press:
+                print("one_save is pressed")
+                root.saveinstru()
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'RecordTwo'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            rows: 2
+            padding: 10, 125, 10, 150
+            spacing: 20
+            Accordion:
+                orientation: 'horizontal'
+                anim_duration: 1.5
+                AccordionItem:
+                    title: 'Second track'
+                    Carousel:
+                        direction: 'right'
+                        anim_type: 'linear'
+                        id: secondtrack
+                        AsyncImage:
+                            source: 'img/micro.png'
+
+                        AsyncImage:
+                            source: 'img/piano.png'
+
+                        AsyncImage:
+                            source: 'img/guitarelec.png'
+
+                        AsyncImage:
+                            source: 'img/guitaraccoustic.png'
+
+                        AsyncImage:
+                            source: 'img/batterie.png'
+
+                AccordionItem:
+                    title: 'First track'
+                    Carousel:
+                        direction: 'right'
+                        anim_type: 'linear'
+                        id: firsttrack
+                        AsyncImage:
+                            source: 'img/micro.png'
+
+                        AsyncImage:
+                            source: 'img/piano.png'
+
+                        AsyncImage:
+                            source: 'img/guitarelec.png'
+
+                        AsyncImage:
+                            source: 'img/guitaraccoustic.png'
+
+                        AsyncImage:
+                            source: 'img/batterie.png'
+
+    FloatLayout:
+        size_hint_y: .2
+        padding: 10
+        Button:
+            text: 'Tracks'
+            on_release:
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'Tracks'
+            size_hint: None, None
+            size: 100, 40
+            pos_hint: {'x' : .03, 'y': .25}
+            font_size: 20
+
+<RecordingOne>:
+    record_button: record_button
+    FloatLayout:
+        id: layout1
+
+    FloatLayout:
+        Label:
+            text: 'R E C O R D'
+            color: 0, 0.5, 1, 1
+            size_hint: 1, 1
+            font_size: 40
+            pos_hint: {'center_x':.5, 'center_y':.9}
+
+    FloatLayout:
+        size_hint_y: .2
+        padding: 10
+        Button:
+            text: 'Back'
+            on_release:
+                root.removeinstru()
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'InstruOne'
+            size_hint: None, None
+            size: 100, 40
+            pos_hint: {'x' : .03, 'y': .25}
+            font_size: 20
+
+        ToggleButton:
+            id: record_button
+            text: root.button_text
+            size_hint: None, None
+            size: 150, 50
+            pos_hint: {'center_x' : .5, 'y': .5}
+            on_release:
+                root.record_audio()
+
+    FloatLayout:
+        id: layout2
+        size_hint_y: .2
+        padding: 10
+
+<RecordingTwo>:
+    FloatLayout:
+        Label:
+            text: 'R E C O R D (two)'
+            color: 0, 0.5, 1, 1
+            size_hint: 1, 1
+            font_size: 40
+            pos_hint: {'center_x':.5, 'center_y':.9}
+
+        Button:
+            text: 'Back'
+            size_hint: .2, .1
+            pos_hint: {'center_x':.15, 'center_y': .1}
+            on_press:
+                print("two is pressed")
+                root.manager.transition = WipeTransition()
+                root.manager.current = 'InstruTwo'
+                root.removeinstrudouble()
+
+        Button:
+            text: 'Try'
+            id: button_try
+            size_hint: .2, .1
+            pos_hint: {'center_x':.85, 'center_y': .9}
+            on_press:
+                root.affichageinstrudouble()
